@@ -32,6 +32,10 @@ int main()
 
 			if(start_d < r || (x1==c_x && y1==c_y)) derail++;
 			if(end_d < r || (x2==c_x && y2==c_y)) enter++;
+			if(start_d + end_d < 2 * r) {
+				derail--;
+				enter--;
+			}
 		}
 
 		printf("%d\n", enter + derail);
