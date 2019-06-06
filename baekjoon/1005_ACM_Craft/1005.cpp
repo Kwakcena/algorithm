@@ -8,7 +8,6 @@ const int MAX = 100050;
 using namespace std;
 
 int T, N, K, W, D[MAX];
-int result[MAX], inx;
 int max_level;
 
 vector <int> myGraph[MAX];
@@ -16,7 +15,6 @@ vector <int> myTree[MAX];
 
 void BFS()
 {
-	int r = 5;
 	max_level = 0;
 	queue <int> Q;
 	queue <int> level;
@@ -64,14 +62,16 @@ int main()
 		for(int i=1; i<=K; i++) {
 			scanf("%d", &D[i]);
 		}
+		printf("시간 입력 끝\n");
 
-		for(int i=1; i<=N; i++) {
+		while(N--) {
 			int x, y;
 			scanf("%d %d", &x, &y);
-			
+				
 			//연결 관계 입력
 			myGraph[x].push_back(y);
 		}
+		printf("연결 입력 끝\n");
 		//목표 건물 입력
 		scanf("%d", &W);
 		//BFS를 돌린다.
@@ -85,10 +85,10 @@ int main()
 		}
 		result += D[W];
 		//결과 출력
-		printf("%d\n", result); 
+		printf("\n%d\n", result); 
 
-		clearVector(myGraph, N);
-		clearVector(myTree, max_level);
+		clearVector(myGraph, MAX);
+		clearVector(myTree, MAX);
 	}
 
 	return 0;
