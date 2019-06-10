@@ -5,7 +5,7 @@ using namespace std;
 const int MAX = 21;
 
 char Table[MAX][MAX];
-int R, C, result;
+int R, C, result, max;
 bool check[123];
 
 int dy[4] = {-1, +1, 0, 0};
@@ -15,6 +15,7 @@ void DFS(int start_y, int start_x)
 {
 	check[Table[start_y][start_x]] = true;
 	result++;
+	if(result > max) max = result;
 
 	for(int idx=0; idx<4; idx++) {
 		int row = start_y + dy[idx];
@@ -23,6 +24,8 @@ void DFS(int start_y, int start_x)
 		if((row <= R) && (row >= 1) && (col <= C) && (col >= 1)) {
 			if(!check[Table[row][col]]) {
 				DFS(row, col);
+				check[Table[row][col]] = false;
+				result--;
 			}
 		}
 	}
@@ -40,7 +43,7 @@ int main()
 		}
 	}
 	DFS(1,1);
-	printf("%d", result);
+	printf("%d", max);
 			
 	return 0;
 }
