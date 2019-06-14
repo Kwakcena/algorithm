@@ -19,31 +19,31 @@ void DFS(int visited, int a_under, int a_diges, int test)
 	cnt++;
 	if(cnt > maxCnt) maxCnt = cnt;
 
-	printf("재귀 %d) 방문 : (%d %d)\n", test, data[visited].understanding, data[visited].digestive_power);
+	//printf("재귀 %d) 방문 : (%d %d)\n", test, data[visited].understanding, data[visited].digestive_power);
 
 	for(int i=0; i<=data[visited].capacity_value; i++) {
 		a_under += data[visited].capacity_value - i;
 		a_diges += i;
-		printf("재귀 %d) 현재 (%d %d)\n",test, a_under, a_diges);
+		//printf("재귀 %d) 현재 (%d %d)\n",test, a_under, a_diges);
 		for(int k=0; k<N; k++) {
 			if(!check[k] && k != visited) {
 				if(a_under >= data[k].understanding || a_diges >= data[k].digestive_power) {
 					test++;
 					DFS(k, a_under, a_diges, test);
-					printf("재귀 %d) %d 에서 돌아옴\n",test,  k);
+					//printf("재귀 %d) %d 에서 돌아옴\n",test,  k);
 					test--;
 					cnt--;
 					check[k] = false;
 				}
-				else {
-					printf("재귀 %d) %d 불가능\n",test,  k);
-				}
-			}
-			else {
-				printf("재귀 %d) %d 불가능\n",test, k);
+//				else {
+//					printf("재귀 %d) %d 불가능\n",test,  k);
+//				}
+//			}
+//			else {
+//				printf("재귀 %d) %d 불가능\n",test, k);
 			}
 		}
-		printf("재귀 %d) 감소 실행\n", test);
+		//printf("재귀 %d) 감소 실행\n", test);
 		a_under -= data[visited].capacity_value - i;
 		a_diges -= i;
 	}
@@ -71,7 +71,7 @@ int main()
 			cnt = 0;
 			maxCnt = 0;
 			int index = list[i];
-			DFS(index, data[index].understanding, data[index].digestive_power, 1);
+			DFS(index, 1, 1, 1);
 
 			if(result[result_idx] < maxCnt) result[result_idx] = maxCnt;
 		}
