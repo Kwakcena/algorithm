@@ -74,6 +74,7 @@ int main()
 			DFS(index, 1, 1, 1);
 
 			if(result[result_idx] < maxCnt) result[result_idx] = maxCnt;
+			break;
 		}
 		result_idx++;
 	}
