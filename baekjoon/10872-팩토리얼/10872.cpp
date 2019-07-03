@@ -1,17 +1,15 @@
 #include <stdio.h>
 
-int func(int N)
-{
-	if(N == 1) return 1;
-	else return N * func(N-1);
-}
-
 int main()
 {
 	int N;
+	int result = 1;
 	scanf("%d", &N);
 
-	printf("%d" , func(N));
+	for(int i=2; i<=N; i++) 
+		result *= i;
+	
+	printf("%d", result);
 
 	return 0;
 }
