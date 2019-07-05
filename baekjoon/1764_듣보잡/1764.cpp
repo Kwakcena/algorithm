@@ -17,23 +17,33 @@ void Sort(char str[][21], int a_len)
 	}
 }
 
-//이진탐색 코드 추가.
-int binarySearch(char arr[][21], int start, int end, char value[])
+//이진탐색 비 재귀
+int binarySearch(char arr[][21], int myStart, int myEnd, char value[])
 {
-	// -1 : 아스키 코드 기준으로 문자열 see_list가 더 클때
-	// 0 : 아스키 코드 기준으로 두 문자열이 같을 때
-	// 1 : 아스키 코드 기준으로 문자열 d_list가 더 클때
+	int start, end;
+	int mid = 0;
+	// start : value보다 항상 작은 값을 가리킨다.
+	// end : valueㅂ다 항상 큰 값을 가리킨다.
 	
-	if(start > end) return -1;
-	else if(start == end) {
-		if(strcmp(arr[start], value) == 0) return start;
-	}
-	else {
-		int mid = (start + end) / 2;
+	if(strcmp(arr[myStart], value) > 0) return -1;
+	else if(strcmp(arr[myStart], value) == 0) return myStart;
+
+	if(strcmp(arr[myEnd], value) < 0) return -1;
+	else if(strcmp(arr[myEnd], value) == 0) return myEnd;
+
+	start = myStart;
+	end = myEnd;
+
+	while(start + 1 < end)
+	{
+		mid = (start + end) / 2;
+
 		if(strcmp(arr[mid], value) == 0) return mid;
-		else if(strcmp(arr[mid], value) > 0) return binarySearch(arr, start, mid-1, value);
-		else return binarySearch(arr, mid+1, end, value);
+		else if(strcmp(arr[mid], value) > 0) end = mid;
+		else start = mid;
 	}
+
+	return -1;
 }
 
 int main()
@@ -63,6 +73,8 @@ int main()
 			strcpy(result[idx++], d_list[i]);
 		}
 	}
+
+	//printf("%d\n", binarySearch(see_list, 0, M-1, d_list[0]));
 
 	Sort(result, idx);
 	for(int i=0; i<idx; i++) {
