@@ -17,6 +17,25 @@ void Sort(char str[][21], int a_len)
 	}
 }
 
+//이진탐색 코드 추가.
+int binarySearch(char arr[][21], int start, int end, char value[])
+{
+	// -1 : 아스키 코드 기준으로 문자열 see_list가 더 클때
+	// 0 : 아스키 코드 기준으로 두 문자열이 같을 때
+	// 1 : 아스키 코드 기준으로 문자열 d_list가 더 클때
+	
+	if(start > end) return -1;
+	else if(start == end) {
+		if(strcmp(arr[start], value) == 0) return start;
+	}
+	else {
+		int mid = (start + end) / 2;
+		if(strcmp(arr[mid], value) == 0) return mid;
+		else if(strcmp(arr[mid], value) > 0) return binarySearch(arr, start, mid-1, value);
+		else return binarySearch(arr, mid+1, end, value);
+	}
+}
+
 int main()
 {
 
@@ -29,7 +48,7 @@ int main()
 	//답을 담는 배열
 	char result[N+M][21];
 
-	
+
 	for(int i=0; i<N; i++) {
 		scanf("%s", d_list[i]);
 	}
@@ -37,27 +56,19 @@ int main()
 	for(int i=0; i<M; i++) {
 		scanf("%s", see_list[i]);
 	}
-
+	Sort(see_list, M);
 
 	for(int i=0; i<N; i++) {
-		for(int j=0; j<M; j++) {
-			int ret = strcmp(d_list[i], see_list[j]);
-			// -1 : 아스키 코드 기준으로 문자열 see_list가 더 클때
-			// 0 : 아스키 코드 기준으로 두 문자열이 같을 때
-			// 1 : 아스키 코드 기준으로 문자열 d_list가 더 클때
-			if(ret == 0) {
-				strcpy(result[idx++], d_list[i]);
-			}
+		if(binarySearch(see_list, 0, M-1, d_list[i]) != -1) {
+			strcpy(result[idx++], d_list[i]);
 		}
 	}
-			
-	
-	Sort(result, idx);
 
+	Sort(result, idx);
 	for(int i=0; i<idx; i++) {
 		printf("%s\n", result[i]);
 	}
-	
+
 
 	return 0;
 }
