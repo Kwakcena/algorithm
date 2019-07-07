@@ -4,7 +4,7 @@
 
 int N, M, idx = 0;
 
-int getLeft(char arr[][21], char left[][21], int start, int end, const char* pivot)
+int getLeft(char arr[][21], char left[][21], int start, int end, char pivot[])
 {
 	int idx = 0;
 	for(int i=start; i<=end; i++) {
@@ -13,10 +13,16 @@ int getLeft(char arr[][21], char left[][21], int start, int end, const char* piv
 		}
 	}
 
+//	printf("\n==================\n");
+//	printf("pivot : %s\n", pivot);
+//	printf("***getLeft\n");
+//	for(int i=0; i<idx; i++) printf("left[%d] : %s\n",i, left[i]);
+//	printf("left idx : %d\n", idx);
+
 	return idx;
 }
 
-int getRight(char arr[][21], char right[][21], int start, int end, const char* pivot)
+int getRight(char arr[][21], char right[][21], int start, int end, char pivot[])
 {
 	int idx = 0;
 	for(int i=start; i<=end; i++) {
@@ -25,6 +31,12 @@ int getRight(char arr[][21], char right[][21], int start, int end, const char* p
 		}
 	}
 
+//	printf("\n==================\n");
+//	printf("pivot : %s\n", pivot);
+//	printf("***getRight\n");
+//	for(int i=0; i<idx; i++) printf("right[%d] : %s\n", i, right[i]);
+//	printf("right idx : %d\n", idx);
+
 	return idx;
 }
 
@@ -32,19 +44,14 @@ void quickSort(char arr[][21], int start, int end)
 {
 	if(start >= end) return;
 
-	const char *pivot = arr[start];
+	char pivot[21];
+	strcpy(pivot, arr[start]);
+
 	char left[N+M][21], right[N+M][21];
 
 	int left_cnt = getLeft(arr, left, start+1, end, pivot);
 	int right_cnt = getRight(arr, right, start+1, end, pivot);
 	
-	printf("\n==================\n");
-	printf("pivot : %s\n", pivot);
-	printf("***getLeft\n");
-	for(int i=0; i<left_cnt; i++) printf("%s\n", left[i]);
-	printf("***getRight\n");
-	for(int i=0; i<right_cnt; i++) printf("%s\n", right[i]);
-	printf("==================\n");
 
 	for(int i=0; i<left_cnt; i++) {
 		strcpy(arr[start+i], left[i]);
@@ -53,14 +60,6 @@ void quickSort(char arr[][21], int start, int end)
 	for(int i=0; i<right_cnt; i++) {
 		strcpy(arr[start+left_cnt+1+i], right[i]);
 	}
-
-	printf("\n==================\n");
-	printf("***arr\n");
-	for(int i=0; i<end; i++) {
-		printf("%s\n", arr[i]);
-	}
-	printf("\n==================\n");
-
 
 	quickSort(arr, start, start+left_cnt-1);
 	quickSort(arr, start+left_cnt+1, end);
@@ -116,10 +115,11 @@ int main()
 	}
 	quickSort(see_list, 0, M-1);
 
-	printf("----- SORT\n");
-	for(int i=0; i<M; i++) {
-		printf("%s\n", see_list[i]);
-	}
+//	printf("after ----- SORT\n");
+//	for(int i=0; i<M; i++) {
+//		printf("%s\n", see_list[i]);
+//	}
+
 	for(int i=0; i<N; i++) {
 		if(binarySearch(see_list, 0, M-1, d_list[i]) != -1) {
 			strcpy(result[idx++], d_list[i]);
@@ -127,7 +127,7 @@ int main()
 	}
 
 	quickSort(result, 0, idx-1);
-	printf("---\n");
+	printf("%d\n", idx);
 	for(int i=0; i<idx; i++) {
 		printf("%s\n", result[i]);
 	}
