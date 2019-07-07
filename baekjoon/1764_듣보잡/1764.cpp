@@ -4,7 +4,7 @@
 
 int N, M, idx = 0;
 
-int getLeft(char arr[][21], char left[][21], int start, int end, char pivot[])
+int getLeft(char **arr, char **left, int start, int end, char pivot[])
 {
 	int idx = 0;
 	for(int i=start; i<=end; i++) {
@@ -13,16 +13,10 @@ int getLeft(char arr[][21], char left[][21], int start, int end, char pivot[])
 		}
 	}
 
-//	printf("\n==================\n");
-//	printf("pivot : %s\n", pivot);
-//	printf("***getLeft\n");
-//	for(int i=0; i<idx; i++) printf("left[%d] : %s\n",i, left[i]);
-//	printf("left idx : %d\n", idx);
-
 	return idx;
 }
 
-int getRight(char arr[][21], char right[][21], int start, int end, char pivot[])
+int getRight(char **arr, char **right, int start, int end, char pivot[])
 {
 	int idx = 0;
 	for(int i=start; i<=end; i++) {
@@ -31,23 +25,24 @@ int getRight(char arr[][21], char right[][21], int start, int end, char pivot[])
 		}
 	}
 
-//	printf("\n==================\n");
-//	printf("pivot : %s\n", pivot);
-//	printf("***getRight\n");
-//	for(int i=0; i<idx; i++) printf("right[%d] : %s\n", i, right[i]);
-//	printf("right idx : %d\n", idx);
-
 	return idx;
 }
 
-void quickSort(char arr[][21], int start, int end)
+void quickSort(char **arr, int start, int end)
 {
 	if(start >= end) return;
 
 	char pivot[21];
 	strcpy(pivot, arr[start]);
 
-	char left[N+M][21], right[N+M][21];
+	char **left = (char **)malloc(sizeof(char*)*(N+M));
+	for(int i=0; i<N+M; i++) {
+		*(left + i) = (char*)malloc(sizeof(char)*21);
+	}
+	char **right = (char **)malloc(sizeof(char*)*(N+M));
+	for(int i=0; i<N+M; i++) {
+		*(right + i) = (char*)malloc(sizeof(char)*21);
+	}
 
 	int left_cnt = getLeft(arr, left, start+1, end, pivot);
 	int right_cnt = getRight(arr, right, start+1, end, pivot);
@@ -66,7 +61,7 @@ void quickSort(char arr[][21], int start, int end)
 }
 
 //이진탐색 비 재귀
-int binarySearch(char arr[][21], int myStart, int myEnd, char value[])
+int binarySearch(char **arr, int myStart, int myEnd, char value[])
 {
 	int start, end;
 	int mid = 0;
@@ -100,11 +95,20 @@ int main()
 	scanf("%d %d", &N, &M);
 
 	//듣도 보도 못한
-	char d_list[N][21];
-	char see_list[M][21];
-	//답을 담는 배열
-	char result[N+M][21];
+	char **d_list = (char **)malloc(sizeof(char*)*N);
+	for(int i=0; i<N; i++) {
+		*(d_list + i) = (char*)malloc(sizeof(char)*21);
+	}
 
+	char **see_list = (char **)malloc(sizeof(char*)*M);
+	for(int i=0; i<M; i++) {
+		*(see_list + i) = (char*)malloc(sizeof(char)*21);
+	}
+	//답을 담는 배열
+	char **result = (char **)malloc(sizeof(char*)*(N+M));
+	for(int i=0; i<N+M; i++) {
+		*(result + i) = (char*)malloc(sizeof(char)*21);
+	}
 
 	for(int i=0; i<N; i++) {
 		scanf("%s", d_list[i]);
@@ -114,11 +118,6 @@ int main()
 		scanf("%s", see_list[i]);
 	}
 	quickSort(see_list, 0, M-1);
-
-//	printf("after ----- SORT\n");
-//	for(int i=0; i<M; i++) {
-//		printf("%s\n", see_list[i]);
-//	}
 
 	for(int i=0; i<N; i++) {
 		if(binarySearch(see_list, 0, M-1, d_list[i]) != -1) {
@@ -132,6 +131,20 @@ int main()
 		printf("%s\n", result[i]);
 	}
 
+	for(int i=0; i<N+M; i++) {
+		free(*(result + i));
+	}
+	free(result);
+
+	for(int i=0; i<M; i++) {
+		free(*(see_list + i));
+	}
+	free(result);
+
+	for(int i=0; i<N; i++) {
+		free(*(d_list + i));
+	}
+	free(result);
 
 	return 0;
 }
