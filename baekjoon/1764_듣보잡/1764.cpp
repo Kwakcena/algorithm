@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+const int MAX = 500001;
 int N, M, idx = 0;
 
 int getLeft(char **arr, char **left, int start, int end, char pivot[])
@@ -35,18 +36,16 @@ void quickSort(char **arr, int start, int end)
 	char pivot[21];
 	strcpy(pivot, arr[start]);
 
-	char **left = (char **)malloc(sizeof(char*)*(N+M));
-	for(int i=0; i<N+M; i++) {
+	char **left = (char **)malloc(sizeof(char*)*MAX);
+	char **right = (char **)malloc(sizeof(char*)*MAX);
+
+	for(int i=0; i<MAX; i++) {
 		*(left + i) = (char*)malloc(sizeof(char)*21);
-	}
-	char **right = (char **)malloc(sizeof(char*)*(N+M));
-	for(int i=0; i<N+M; i++) {
 		*(right + i) = (char*)malloc(sizeof(char)*21);
 	}
 
 	int left_cnt = getLeft(arr, left, start+1, end, pivot);
 	int right_cnt = getRight(arr, right, start+1, end, pivot);
-	
 
 	for(int i=0; i<left_cnt; i++) {
 		strcpy(arr[start+i], left[i]);
@@ -65,8 +64,8 @@ int binarySearch(char **arr, int myStart, int myEnd, char value[])
 {
 	int start, end;
 	int mid = 0;
-	// start : value보다 항상 작은 값을 가리킨다.
-	// end : valueㅂ다 항상 큰 값을 가리킨다.
+	// start : value 보다 항상 작은 값을 가리킨다.
+	// end : value 보다 항상 큰 값을 가리킨다.
 	
 	if(strcmp(arr[myStart], value) > 0) return -1;
 	else if(strcmp(arr[myStart], value) == 0) return myStart;
@@ -94,57 +93,52 @@ int main()
 
 	scanf("%d %d", &N, &M);
 
-	//듣도 보도 못한
-	char **d_list = (char **)malloc(sizeof(char*)*N);
-	for(int i=0; i<N; i++) {
+	//듣지도 못했던 사람을 담는 공간
+	char **d_list = (char **)malloc(sizeof(char*)*MAX);
+	char **see_list = (char **)malloc(sizeof(char*)*MAX);
+	char **result = (char **)malloc(sizeof(char*)*MAX);
+	for(int i=0; i<MAX; i++) {
 		*(d_list + i) = (char*)malloc(sizeof(char)*21);
-	}
-
-	char **see_list = (char **)malloc(sizeof(char*)*M);
-	for(int i=0; i<M; i++) {
 		*(see_list + i) = (char*)malloc(sizeof(char)*21);
-	}
-	//답을 담는 배열
-	char **result = (char **)malloc(sizeof(char*)*(N+M));
-	for(int i=0; i<N+M; i++) {
 		*(result + i) = (char*)malloc(sizeof(char)*21);
 	}
 
+	//듣 - 입력
 	for(int i=0; i<N; i++) {
 		scanf("%s", d_list[i]);
 	}
 
+	//보 - 입력
 	for(int i=0; i<M; i++) {
 		scanf("%s", see_list[i]);
 	}
+	//보 - 정렬
 	quickSort(see_list, 0, M-1);
 
+	//듣에서 보를 보면서 일치하면 결과배열에 담음
 	for(int i=0; i<N; i++) {
 		if(binarySearch(see_list, 0, M-1, d_list[i]) != -1) {
 			strcpy(result[idx++], d_list[i]);
 		}
 	}
 
+	//결과배열을 한번 정렬
 	quickSort(result, 0, idx-1);
+	//인원수 출력
 	printf("%d\n", idx);
 	for(int i=0; i<idx; i++) {
 		printf("%s\n", result[i]);
 	}
 
-	for(int i=0; i<N+M; i++) {
+	//메모리 해제
+	for(int i=0; i<MAX; i++) {
 		free(*(result + i));
-	}
-	free(result);
-
-	for(int i=0; i<M; i++) {
 		free(*(see_list + i));
-	}
-	free(result);
-
-	for(int i=0; i<N; i++) {
 		free(*(d_list + i));
 	}
 	free(result);
+	free(see_list);
+	free(d_list);
 
 	return 0;
 }
