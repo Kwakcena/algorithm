@@ -11,29 +11,24 @@ typedef struct pos {
     int x, y, z;
 } POS;
 
-typedef struct DisjointSet {
+typedef struct disjointSet {
     vector<int> parent, rank;
 
-    DisjointSet(int n): parent(n), rank(n,1) {
+    disjointSet(int n): parent(n), rank(n,1) {
         for(int i=0; i<n; i++) 
             parent[i] = i;
     }
 
     int find(int u) {
-        if(u == parent[u]) return u;
-        return parent[u] = find(parent[u]);
-    }
-
-    int findParent(int u, int v) {
-        u = find(u); v = find(v);
-        return u == v ? 1 : 0;
+        return u == parent[u] ? u : parent[u] = find(parent[u]);
     }
 
     void merge(int u, int v) {
         u = find(u); v = find(v);
-
         if(u == v) return;
-        if(rank[u] > rank[v]) swap(u, v);
+
+        if(rank[u] > rank[v]) 
+            swap(u, v);
         parent[v] = u;
 
         if(rank[u] == rank[v]) ++rank[v];
@@ -53,6 +48,7 @@ void vertexConnection(POS *posData, DS *ds, double R)
 {
     for(int i=0; i<N; i++) {
         for(int j=i+1; j<N; j++) {
+            //실수 R보다 작거나 같은 거리에 대해서만 직접 연결.
            if(R >= distanceBetweenTwoPoints(posData[i], posData[j])) {
                ds->merge(i, j);
            }
@@ -80,13 +76,15 @@ void resultPrint(POS *posData, DS *ds)
         cout << "무선망의 개수는 " << wirelessCnt << "개 입니다.";
     cout << endl;
 
+    int idx = 1;
     cout << endl << "=== partition 정보 출력 ===" << endl;
     for(auto elem : partition) {
-        cout << "POINT [" << elem.first << "] 과 연결된 원소 : ";
+        cout << "partition " << idx++ << " --- ";
+        cout << "POINT [" << elem.first << "] 과 연결된 정점 { ";
         for(auto vector_elem : elem.second) {
             cout << vector_elem << " ";
         }
-        cout << endl;
+        cout << "}" <<  endl;
     }
 
 }
