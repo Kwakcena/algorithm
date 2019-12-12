@@ -3,14 +3,16 @@
 #include <vector>
 #include <map>
 
-#define N 10
+#define N 10    //정점의 개수
 
 using namespace std;
 
+//3차원 공간에서 좌표를 저장하는 구조체
 typedef struct pos {
     int x, y, z;
 } POS;
 
+//disjoint set 자료구조 
 typedef struct disjointSet {
     vector<int> parent, rank;
 
@@ -35,6 +37,7 @@ typedef struct disjointSet {
     }
 }DS;
 
+//두 점 사이의 거리 구하는 함수
 double distanceBetweenTwoPoints(POS A, POS B)
 {
     double base = sqrt(pow(B.x - A.x, 2) + pow(B.y - A.y, 2)); 
@@ -44,6 +47,7 @@ double distanceBetweenTwoPoints(POS A, POS B)
     return result;
 }
 
+//각 점을 연결하는 함수
 void vertexConnection(POS *posData, DS *ds, double R)
 {
     for(int i=0; i<N; i++) {
@@ -56,6 +60,7 @@ void vertexConnection(POS *posData, DS *ds, double R)
     }
 }
 
+//최종 결과를 출력해주는 함수
 void resultPrint(POS *posData, DS *ds)
 {
     map<int, vector<int>> partition;
@@ -92,8 +97,9 @@ void resultPrint(POS *posData, DS *ds)
 
 int main()
 {
+    double R;
     DS ds(N + 1);
-    POS test_pos[N] = {
+    POS vertex[N] = {
         {1, 0, 11},
         {12, 0, 2},
         {3, 2, 10},
@@ -106,12 +112,11 @@ int main()
         {0, 0, 0},
     };
    
-    double R;
     cout << "전파 도달 거리를 입력하세요(실수값) : ";
     cin >> R;
 
-    vertexConnection(test_pos, &ds, R);
-    resultPrint(test_pos, &ds);
+    vertexConnection(vertex, &ds, R);
+    resultPrint(vertex, &ds);
 
     return 0;
 }
