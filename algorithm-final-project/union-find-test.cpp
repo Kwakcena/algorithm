@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <map>
 
 #define N 10
 
@@ -41,34 +42,55 @@ typedef struct DisjointSet {
 
 double distanceBetweenTwoPoints(POS A, POS B)
 {
-    cout << "A의 좌표 : (x : " << A.x << ", y : " << A.y << ", z : " << A.z << ")" << endl;
-    cout << "B의 좌표 : (x : " << B.x << ", y : " << B.y << ", z : " << B.z << ")" << endl;
-
     double base = sqrt(pow(B.x - A.x, 2) + pow(B.y - A.y, 2)); 
     double height = B.z - A.z;
+    double result = sqrt(pow(base, 2) + pow(height, 2));
 
-    cout << "거리 : " << sqrt(pow(base, 2) + pow(height, 2)) << endl;
-    return sqrt(pow(base, 2) + pow(height, 2));
+    return result;
 }
 
-void testPrint(DS ds)
-{
-    for(int i=0; i<N; i++) {
-        cout << "node : " << i << " / parent : " << ds.find(i) << endl;
-    }
-}
-
-void vertexConnection(POS posData[], DS *ds, double R)
+void vertexConnection(POS *posData, DS *ds, double R)
 {
     for(int i=0; i<N; i++) {
         for(int j=i+1; j<N; j++) {
-            cout << "( " << i << " " << j << " )" << endl;
            if(R >= distanceBetweenTwoPoints(posData[i], posData[j])) {
                ds->merge(i, j);
            }
         }
     }
 }
+
+void resultPrint(POS *posData, DS *ds)
+{
+    map<int, vector<int>> partition;
+    cout << "=== 좌표 정보 출력 ===" << endl;
+    for(int i=0; i<N; i++) {
+        partition[ds->find(i)].push_back(i);
+        cout << "POINT [" << i << "]" 
+            << " 좌표 ( x : " << posData[i].x
+            << ", y : " << posData[i].y
+            << ", z : " << posData[i].z
+            << ") " << endl;
+    }
+
+    cout << endl << "=== 무선망의 개수 출력 ===" << endl;
+    int wirelessCnt = partition.size();
+    wirelessCnt == 1 ? 
+        cout << "하나의 무선망 입니다." : 
+        cout << "무선망의 개수는 " << wirelessCnt << "개 입니다.";
+    cout << endl;
+
+    cout << endl << "=== partition 정보 출력 ===" << endl;
+    for(auto elem : partition) {
+        cout << "POINT [" << elem.first << "] 과 연결된 원소 : ";
+        for(auto vector_elem : elem.second) {
+            cout << vector_elem << " ";
+        }
+        cout << endl;
+    }
+
+}
+
 
 int main()
 {
@@ -86,9 +108,12 @@ int main()
         {0, 0, 0},
     };
    
+    double R;
+    cout << "전파 도달 거리를 입력하세요(실수값) : ";
+    cin >> R;
 
-    vertexConnection(test_pos, &ds, 15.0);
-    testPrint(ds);
+    vertexConnection(test_pos, &ds, R);
+    resultPrint(test_pos, &ds);
 
     return 0;
 }
